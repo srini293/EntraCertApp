@@ -1,0 +1,23 @@
+{
+  "name": "ms-identity-app",
+  "version": "1.0.0",
+  "description": "Microsoft Identity Platform Demo - Landing page with 8 identity concept pages",
+  "main": "app.js",
+  "keywords": [
+    "microsoft",
+    "identity",
+    "entra",
+    "msal"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@azure/msal-node": "^5.1.5",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "uuid": "^9.0.1",
+    "jose": "^5.3.0"
+  }
+}
