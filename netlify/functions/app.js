@@ -1,53 +1,25 @@
-//require("dotenv").config();
-//const express = require("express");
 const https = require("https");
 const querystring = require("querystring");
-//const session = require("express-session");
-//const msal = require("@azure/msal-node");
-//const pages = require("./pages");
-const crypto = require("crypto"); 
-
-//const fs = require("fs");
+const crypto = require("crypto");
 const { SignJWT, importPKCS8 } = require("jose");
 const { v4: uuidv4 } = require("uuid");
-const jwt = require("jsonwebtoken");
 
-
-//const app = express();
-//const PORT = process.env.PORT || 3001;
-
+// ================= PKCE =================
 function generatePkceCodes() {
-    const verifier = crypto.randomBytes(32).toString("base64url");
-
-    const challenge = crypto
-        .createHash("sha256")
-        .update(verifier)
-        .digest("base64url");
-
-    return {
-        verifier,
-        challenge
-    };
+  const verifier = crypto.randomBytes(32).toString("base64url");
+  const challenge = crypto.createHash("sha256").update(verifier).digest("base64url");
+  return { verifier, challenge };
 }
- 
 
-/* ================= CONFIG ================= */
-
- 
+// ================= CONFIG =================
 const CLIENT_ID = process.env.CLIENT_ID;
-//const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const TENANT_ID = process.env.TENANT_ID;
 const TENANT_NAME = process.env.TENANT_NAME;
 const USE_CIAM = process.env.USE_CIAM === "true";
-const REDIRECT_URI = `https://mducertapp.netlify.app/auth/redirect`;
-
-//const privateKeyPem = fs.readFileSync("./private.key", "utf8"); // PEM private key
-const tokenEndpoint = `https://mduext.ciamlogin.com/aae3822e-f98c-4aad-a474-2257bb4b840f/oauth2/v2.0/token`;
-//const cer = fs.readFileSync("cert.pem", "utf8"); // PEM certificate for thumbprint calculation
+const REDIRECT_URI = "https://mducertapp.netlify.app/auth/redirect";
 
 const privateKeyPem = process.env.PRIVATE_KEY;
 const cer = process.env.CERT;
-// EM certificate for thumbprint calculation
 
 const der = Buffer.from(
   cer.toString()
@@ -57,49 +29,18 @@ const der = Buffer.from(
   "base64"
 );
 
-
-const thumbprint = crypto
-  .createHash("sha256")
-  .update(der)
-  .digest("base64url");
-
- console.log("thumbprint value:" + thumbprint);
-/*const options = {
-    algorithm: "PS256",
-    header: {
-        kid: `14d1b6b7-dcb4-4b2e-bd06-45e244ca5b01`
-    }
-};
-*/
+const thumbprint = crypto.createHash("sha256").update(der).digest("base64url");
 
 const needsSetup = !CLIENT_ID || CLIENT_ID === "REPLACE_WITH_YOUR_CLIENT_ID";
 
 const AUTHORITY = USE_CIAM
-    ? `https://${TENANT_NAME}.ciamlogin.com/${TENANT_ID}`
-    : `https://login.microsoftonline.com/${TENANT_ID}`;
-
+  ? `https://${TENANT_NAME}.ciamlogin.com/${TENANT_ID}`
+  : `https://login.microsoftonline.com/${TENANT_ID}`;
 
 console.log("Authority URL:", AUTHORITY);
 console.log("Needs setup:", needsSetup);
 
- 
-
-/* ================= MSAL ================= */
-
- 
-
-if (!needsSetup) {
-    const msalConfig = {
-        auth: {
-            clientId: CLIENT_ID,
-            authority: AUTHORITY,
-            //clientSecret: CLIENT_SECRET,
-            knownAuthorities: USE_CIAM ? [`${TENANT_NAME}.ciamlogin.com`] : [],
-            validateAuthority: false, // Disable for CIAM
-        },
-    };
-
-console.log("reached near client assertion generation");
+// ================= Client Assertion =================
 async function generateClientAssertion(tokenEndpoint) {
   const privateKey = await importPKCS8(privateKeyPem, "PS256");
   const now = Math.floor(Date.now() / 1000);
@@ -114,7 +55,7 @@ async function generateClientAssertion(tokenEndpoint) {
     .setExpirationTime(now + 600)
     .sign(privateKey);
 }
- }
+
 // ================= Helpers =================
 function buildManualAuthUrl(params) {
   const baseUrl = USE_CIAM
@@ -303,4 +244,4 @@ exports.handler = async (event, context) => {
 
   // DEFAULT
   return { statusCode: 404, body: JSON.stringify({ error: "Route not found" }) };
-  };
+};
