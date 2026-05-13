@@ -88,11 +88,6 @@ console.log("Needs setup:", needsSetup);
 
  
 
-//let cca = null;
-//let cryptoProvider = null;
-
- 
-
 if (!needsSetup) {
     const msalConfig = {
         auth: {
@@ -119,7 +114,7 @@ async function generateClientAssertion(tokenEndpoint) {
     .setExpirationTime(now + 600)
     .sign(privateKey);
 }
-
+ }
 // ================= Helpers =================
 function buildManualAuthUrl(params) {
   const baseUrl = USE_CIAM
