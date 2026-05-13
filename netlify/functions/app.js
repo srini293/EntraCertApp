@@ -308,3 +308,4 @@ exports.handler = async (event, context) => {
 
   // DEFAULT
   return { statusCode: 404, body: JSON.stringify({ error: "Route not found" }) };
+  };
