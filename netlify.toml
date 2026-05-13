@@ -1,0 +1,39 @@
+[[redirects]]
+  from = "/login"
+  to = "/.netlify/functions/app/login"
+  status = 200
+
+[[redirects]]
+  from = "/signup"
+  to = "/.netlify/functions/app/signup"
+  status = 200
+
+[[redirects]]
+  from = "/auth/redirect"
+  to = "/.netlify/functions/app/auth/redirect"
+  status = 200
+
+[[redirects]]
+  from = "/logout"
+  to = "/.netlify/functions/app/logout"
+  status = 200
+
+[[redirects]]
+  from = "/graph-call"
+  to = "/.netlify/functions/app/graph-call"
+  status = 200
+
+[[redirects]]
+  from = "/graph-refresh"
+  to = "/.netlify/functions/app/graph-refresh"
+  status = 200
+
+[[redirects]]
+  from = "/graph-edit"
+  to = "/.netlify/functions/app/graph-edit"
+  status = 200
+
+[[redirects]]
+  from = "/graph-groups"
+  to = "/.netlify/functions/app/graph-groups"
+  status = 200
