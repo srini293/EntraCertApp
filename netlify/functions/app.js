@@ -3,7 +3,6 @@ const querystring = require("querystring");
 const crypto = require("crypto");
 const { SignJWT, importPKCS8 } = require("jose");
 const { v4: uuidv4 } = require("uuid");
-const pages = require("../pages"); // adjust path if needed
 
 // ================= PKCE =================
 function generatePkceCodes() {
@@ -184,12 +183,10 @@ exports.handler = async (event, context) => {
     const verifier = getCookie("pkce_verifier", event.headers.cookie);
     try {
       const tokens = await exchangeCodeForToken(code, verifier);
-return {
-  statusCode: 200,
-  headers: { "Content-Type": "text/html" },
-  body: pages.renderTokens(account, idClaims, tokens.access_token)
-};
-
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ success: true, tokens }),
+      };
     } catch (err) {
       return {
         statusCode: 400,
@@ -230,18 +227,7 @@ return {
 
   // PLACEHOLDER ROUTES
   if (path.endsWith("/profile")) {
-    const idClaims = jwt.decode(tokens.id_token);
-  const account = {
-    name: idClaims.name,
-    username: idClaims.preferred_username,
-    tenantId: idClaims.tid,
-    localAccountId: idClaims.oid
-  };
-  return {
-    statusCode: 200,
-    headers: { "Content-Type": "text/html" },
-    body: pages.renderProfile(account, idClaims)
-  };
+    return { statusCode: 200, body: JSON.stringify({ message: "Profile placeholder" }) };
   }
   if (path.endsWith("/graph-call")) {
     return { statusCode: 200, body: JSON.stringify({ message: "Graph API call placeholder" }) };
