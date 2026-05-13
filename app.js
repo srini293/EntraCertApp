@@ -39,7 +39,7 @@ const CLIENT_ID = process.env.CLIENT_ID;
 const TENANT_ID = process.env.TENANT_ID;
 const TENANT_NAME = process.env.TENANT_NAME;
 const USE_CIAM = process.env.USE_CIAM === "true";
-const REDIRECT_URI = `http://localhost:${PORT}/auth/redirect`;
+const REDIRECT_URI = `https://mducertapp.netlify.app/auth/redirect`;
 
 const privateKeyPem = fs.readFileSync("./private.key", "utf8"); // PEM private key
 const tokenEndpoint = `https://mduext.ciamlogin.com/aae3822e-f98c-4aad-a474-2257bb4b840f/oauth2/v2.0/token`;
